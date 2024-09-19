@@ -117,21 +117,21 @@ class HomeScreen extends StatelessWidget {
                                           ? NetworkImage(
                                               usersList[index].userImage!)
                                           : AssetImage(kUserAvatar),
-                                  radius: 30,
+                                  radius: 28,
                                 ),
                                 title: Text(
                                   usersList[index].userName,
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
-                                    fontSize: 21,
+                                    fontSize: 19,
                                   ),
                                 ),
                                 subtitle: Text(
                                   lastMessage.toString(),
                                   style: const TextStyle(
                                     color: Colors.white70,
-                                    fontSize: 20,
+                                    fontSize: 17,
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                   maxLines: 1,
