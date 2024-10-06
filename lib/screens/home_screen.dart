@@ -1,5 +1,4 @@
 import 'package:chat_waves_app/constants.dart';
-import 'package:chat_waves_app/helper/helper_functions.dart';
 import 'package:chat_waves_app/models/user_model.dart';
 import 'package:chat_waves_app/screens/chat_screen.dart';
 import 'package:chat_waves_app/screens/edit_user_screen.dart';
@@ -51,7 +50,6 @@ class HomeScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(12.0),
                 child: CustomCircleIconButton(
                   onPressed: () {
-                    logout(context);
                   },
                   icon: Icons.logout,
                 ),
