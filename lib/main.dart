@@ -1,5 +1,4 @@
 import 'package:chat_waves_app/cubits/login_cubit/login_cubit.dart';
-import 'package:chat_waves_app/helper/push_notifications.dart';
 import 'package:chat_waves_app/screens/chat_screen.dart';
 import 'package:chat_waves_app/screens/edit_user_screen.dart';
 import 'package:chat_waves_app/screens/login_screen.dart';
@@ -16,7 +15,6 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  await PushNotifications().initNotifications();
   runApp(const ChatBubblesApp());
 }
 

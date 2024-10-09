@@ -8,18 +8,37 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
+
+dependencies {
+    implementation 'com.android.support:multidex:2.0.1'
+}
+
 android {
     namespace = "com.example.chat_waves_app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
+
+
+    dexOptions
+            {
+        javaMaxHeapSize "4g"
+    }
+
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+
+    lintOptions {
+        disable 'InvalidPackage'
+        disable "Instantiatable"
+        checkReleaseBuilds false
+        abortOnError false
     }
 
     kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_1_8
+        jvmTarget = '11'
     }
 
     defaultConfig {
@@ -31,6 +50,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled true
     }
 
     buildTypes {

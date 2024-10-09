@@ -1,4 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../helper/helper_functions.dart';
@@ -18,6 +19,10 @@ class LoginCubit extends Cubit<LoginState> {
         email: email,
         password: password,
       );
+      if (kDebugMode)
+      {
+        print(user);
+      }
       emit(LoginSuccessState());
     }
     on FirebaseAuthException catch (e) {
