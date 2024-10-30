@@ -11,11 +11,13 @@ class CustomTextFormField extends StatelessWidget {
       this.isPassword = false,
       required this.prefixIcon,
       this.suffixIcon,
-      this.suffixPressed});
+      this.suffixPressed,
+      this.initialValue});
 
   final IconData prefixIcon;
   IconData? suffixIcon;
   final String hint;
+  String? initialValue;
   bool? isPassword;
   Function(String)? onChanged;
   VoidCallback? suffixPressed;
@@ -23,6 +25,7 @@ class CustomTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      initialValue: initialValue,
       cursorColor: HexColor(kSecondaryColor),
       validator: (data) {
         if (data!.isEmpty) {

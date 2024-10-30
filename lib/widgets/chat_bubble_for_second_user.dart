@@ -1,20 +1,21 @@
+import 'dart:io';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:chat_waves_app/constants.dart';
 import 'package:chat_waves_app/models/message_model.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import '../cubits/chat_cubit/chat_cubit.dart';
 import '../models/user_model.dart'; // Import Firestore
 
 class ChatBubbleForSecondUser extends StatelessWidget {
   // ignore: prefer_const_constructors_in_immutables
-  ChatBubbleForSecondUser(
-      {super.key,
-      required this.messageModel,
-      required this.recipientUserId,
-      String? recipientImage});
+  ChatBubbleForSecondUser({super.key,
+    required this.messageModel,
+    required this.recipientUserId,
+    String? recipientImage});
 
   final MessageModel messageModel;
   final String recipientUserId; // Receive recipientUserId
@@ -22,116 +23,100 @@ class ChatBubbleForSecondUser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final formattedDate =
-        DateFormat('EEE, M/d, h:mm a').format(messageModel.dateTime.toDate());
-    return FutureBuilder<UserModel>(
-      future: fetchUserModel(recipientUserId), // Fetch UserModel
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final recipient = snapshot.data!; // Get recipient UserModel
-
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.start, // Align to the right
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(
-                  left: 16,
-                ),
-                // Add padding to the right
-                child: CircleAvatar(
-                  radius: 28.0,
-                  // Use recipient's image
-                  backgroundImage: recipient.userImage != null
-                      ? NetworkImage(recipient.userImage!)
-                      : AssetImage(kUserAvatar),
-                ),
+    DateFormat('EEE, M/d, h:mm a').format(messageModel.dateTime.toDate());
+    return Padding(
+      padding: const EdgeInsets.only(left: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16),
+            child: CircleAvatar(
+              radius: 28,
+              backgroundImage: _getUserImage(context),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              constraints: BoxConstraints(
+                maxWidth: MediaQuery
+                    .of(context)
+                    .size
+                    .width * 0.7,
               ),
+              padding: const EdgeInsets.symmetric(
+                  vertical: 15, horizontal: 16),
+              margin: const EdgeInsets.symmetric(
+                vertical: 13,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(32),
+                  bottomLeft: Radius.circular(32),
+                  bottomRight: Radius.circular(32),
+                ),
+                color: HexColor(kSecondaryColor),
+              ),
+              child: (messageModel.messageImage != null &&
+                  messageModel.messageImage!.isNotEmpty) ?
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                // Align text to the right
                 children: [
-                  if (messageModel.messageImage != null)
-                    LayoutBuilder(
-                      builder: (context, constraints) {
-                        return FutureBuilder<String>(
-                          future: FirebaseStorage.instance
-                              .ref(messageModel.messageImage!)
-                              .getDownloadURL(),
-                          builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return Padding(
-                                padding: const EdgeInsets.only(
-                                  bottom: 15,
-                                  right: 15, // Align image to the right
-                                ),
-                                child: Image.network(
-                                  snapshot.data!,
-                                  width: 200,
-                                  height: 200,
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            } else if (snapshot.hasError) {
-                              return const Padding(
-                                padding: EdgeInsets.only(right: 16),
-                                // Align error to the right
-                                child: Text('Error loading image'),
-                              );
-                            } else {
-                              return const CircularProgressIndicator();
-                            }
-                          },
-                        );
-                      },
-                    ),
-                  if (messageModel.message.isNotEmpty)
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      // Align text to the right
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 15, horizontal: 16),
-                        margin: const EdgeInsets.all(13),
-                        decoration: BoxDecoration(
-                          borderRadius: const BorderRadius.only(
-                            topRight: Radius.circular(32),
-                            bottomLeft: Radius.circular(32),
-                            bottomRight: Radius.circular(32),
-                          ),
-                          color: HexColor(kSecondaryColor),
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start
-                          ,
-                          // Align text to the right
-                          children: [
-                            SelectableText(
-                              messageModel.message,
-                              style: const TextStyle(
-                                  color: Colors.white, fontSize: 20),
-                            ),
-                            Text(
-                              formattedDate,
-                              style: const TextStyle(
-                                  color: Colors.white60, fontSize: 12),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                  Image.network(
+                    height: 200,
+                    width: 200,
+                    fit: BoxFit.cover,
+                    messageModel.messageImage!, // Display the image
+                    errorBuilder: (context, error, stackTrace) {
+                      return const Text(
+                          'Error loading image'); // Display an error message if loading fails
+                    },
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    formattedDate,
+                    style: const TextStyle(
+                        color: Colors.white60, fontSize: 12),
+                  ),
+                ],
+              )
+                  : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SelectableText(
+                    messageModel.message,
+                    style: const TextStyle(
+                        color: Colors.white, fontSize: 20),
+                  ),
+                  Text(
+                    formattedDate,
+                    style: const TextStyle(
+                        color: Colors.white60, fontSize: 12),
+                  ),
                 ],
               ),
-            ],
-          );
-        } else if (snapshot.hasError) {
-          return const Text('Error loading user data');
-        } else {
-          return const SizedBox();
-        }
-      },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // Function to fetch UserModel from Firestore
+  ImageProvider _getUserImage(BuildContext context) {
+    final chatCubit = BlocProvider.of<ChatCubit>(context);
+
+    if (chatCubit.senderUserImageUrl != null) {
+      return CachedNetworkImageProvider(chatCubit.senderUserImageUrl!);
+    } else if (chatCubit.senderUserImagePath != null) {
+      return FileImage(File(chatCubit.senderUserImagePath!));
+    } else {
+      return AssetImage(kUserAvatar);
+    }
+  }
+
   Future<UserModel> fetchUserModel(String userId) async {
     final userDoc = await FirebaseFirestore.instance
         .collection(kUsersCollection)

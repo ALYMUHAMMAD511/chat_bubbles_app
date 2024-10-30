@@ -9,6 +9,8 @@ class LoginCubit extends Cubit<LoginState> {
   LoginCubit() : super(LoginInitialState());
 
   var auth = FirebaseAuth.instance;
+  IconData suffix = Icons.visibility_sharp;
+  bool isPasswordShown = true;
 
   Future<void> loginUser({required String email, required String password, context}) async
   {
@@ -67,5 +69,12 @@ class LoginCubit extends Cubit<LoginState> {
         Colors.red,
       );
     }
+  }
+
+  void changePasswordVisibility()
+  {
+    isPasswordShown = !isPasswordShown;
+    suffix = isPasswordShown ? Icons.visibility_sharp : Icons.visibility_off_sharp;
+    emit(LoginPasswordChangeVisibilitySuccessState());
   }
 }

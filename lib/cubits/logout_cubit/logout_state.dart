@@ -1,10 +1,8 @@
 part of 'logout_cubit.dart';
 
-abstract class LogoutState extends LogoutCubit{}
+abstract class LogoutState {}
 
 final class LogoutInitialState extends LogoutState {}
-
-final class LogoutLoadingState extends LogoutState {}
 
 final class LogoutSuccessState extends LogoutState {}
 
