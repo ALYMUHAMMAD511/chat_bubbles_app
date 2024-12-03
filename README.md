@@ -1,16 +1,2 @@
-# chat_waves_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![chat slide 1](https://github.com/user-attachments/assets/b37d1f47-03ee-41d4-b898-3cdbfd87c2fe)
+![chat slide 2](https://github.com/user-attachments/assets/c2a3225a-866d-4414-a6d0-448af777390c)
